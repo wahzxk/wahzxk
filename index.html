@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="utf-8" />
+		<title></title>
+	</head>
+	<script src="${base}/r/cms/www/default/newhn/js/jquery-1.8.3.js" type="text/javascript" charset="utf-8"></script>
+	<body>
+		<input type="file" id="uploadFail" name="input"/>
+		<form style="display: flex;margin-bottom: 10px;" action="${base}/tourist/uploadsave.jspx" method="post">
+			<input type="file" id="input" name="input" multiple="multiple" lable="选择文件" />
+		</form>
+	</body>
+	<script>
+		async function plup (that){
+			await uploadex(that);
+			setTimeout(function(){
+				alert('上传成功')
+			},500)
+		},
+		function uploadex(that){
+			return new Promise((succ,fill)=>{
+				event.preventDefault();
+				var form = $('form');
+				// mulitipart form,如文件上传类
+				var formData = new FormData(that);
+				var tmp = formData.getAll('input');
+				for (var i = 0; i < tmp.length; i++) {
+					console.log('上传中...')
+					var sendData = new FormData();
+					sendData.append('Filedata', tmp[i]);
+					$.ajax({
+						type: form.attr('method'),
+						url: form.attr('action'),
+						data: sendData,
+						contentType: false,
+						processData: false
+					}).success(function(res) {
+						//成功提交
+					}).fail(function(jqXHR, textStatus, errorThrown) {
+						//错误信息
+						alert('上传失败')
+					});
+				}
+				succ();
+			})
+		}
+		$('#uploadFail').change(function() {//单个上传
+			//使用JQ的ajax
+			//结合formData实现图片预览
+			var sendData = new FormData();
+			sendData.append('Filedata', this.files[0]);
+			$.ajax({
+				url: '',
+				data: sendData,
+				type: 'post',
+				//ajax2.0可以不用设置请求头，但是jq帮我们自动设置了，这样的话需要我们自己取消掉
+				contentType: false,
+				//取消帮我们格式化数据，是什么就是什么
+				processData: false,
+				success: function(res) {
+				}
+			})
+		})
+		$('form').change(function(event) {//批量上传
+			var that=this;
+			plup(that);
+		});
+	</script>
+</html>
