@@ -153,3 +153,16 @@ module.exports = {
 	jiache: jiache,
 	xingzou: xingzou
 }
+
+
+//使用方法
+var dh = require('daohang.js');
+var startLngLat = {
+	gdLongitude: '',
+	gdLatitude:''
+};
+var endLngLat = {
+	gdLongitude: '',
+	gdLatitude: ''
+};
+dh.jiache(map, startLngLat, endLngLat)
